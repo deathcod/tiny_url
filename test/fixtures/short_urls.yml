@@ -1,0 +1,20 @@
+# == Schema Information
+#
+# Table name: short_urls
+#
+#  id           :integer          not null, primary key
+#  hash_integer :integer
+#  long_url     :string(255)
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  short_url_hash: 1
+  long_url: MyString
+
+two:
+  short_url_hash: 1
+  long_url: MyString

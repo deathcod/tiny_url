@@ -1,0 +1,16 @@
+default: &default
+
+developement:
+  <<: *default
+  BASE_URL: "http://localhost:3000"
+
+test:
+  <<: *default
+  BASE_URL: "http://localhost:3000"
+
+production:
+  <<: *default
+  BASE_URL: "http://139.59.61.15:3000"
+
+
+A: alpha
