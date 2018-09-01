@@ -26,6 +26,10 @@ class ShortUrl < ApplicationRecord
     self[:hash_integer] ||= convert_base_to_decimal(self.hash_string)
   end
 
+  def long_url
+    add_scheme_if_not_present(self[:long_url]) if self[:long_url]
+  end
+
   def filtered_long_url
     @filtered_long_url ||= self.long_url.dup.tap do |str|
       remove_scheme(str)
@@ -36,7 +40,7 @@ class ShortUrl < ApplicationRecord
 
   def generate_short_url
     # Rails.configuration.settings['BASE_URL'] + "/" + self.hash_string
-    "http://localhost:3000" + "/" + self.hash_string
+    "http://localhost:3000/short_urls" + "/" + self.hash_string
   end
 
   def self.find_by_long_url(long_url)
@@ -68,6 +72,14 @@ class ShortUrl < ApplicationRecord
 
   def remove_subdomin(str)
     str.gsub!(/^www./, '')
+  end
+
+  def add_scheme_if_not_present(str)
+    unless str =~ /^https?:\/\//
+      return "http://" + str
+    else
+      return str
+    end
   end
 
   def convert_base_to_decimal(rand_str)
