@@ -55,3 +55,6 @@ vendor/
 
 # ignore storage
 storage/
+
+# dont change puma
+config/puma.rb 
