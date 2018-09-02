@@ -38,7 +38,7 @@ class ShortUrl < ApplicationRecord
 
   def generate_short_url
     # Rails.configuration.settings['BASE_URL'] + "/" + self.hash_string
-    "http://localhost:3000/short_urls" + "/" + self.hash_string
+    "http://139.59.61.15:3000/short_urls" + "/" + self.hash_string
   end
 
   def self.find_by_long_url(long_url)
