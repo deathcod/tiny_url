@@ -58,3 +58,4 @@ storage/
 
 # dont change puma
 config/puma.rb 
+config/secrets.rb
