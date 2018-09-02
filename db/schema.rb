@@ -10,11 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_01_042905) do
+ActiveRecord::Schema.define(version: 2018_09_02_094045) do
 
   create_table "short_urls", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "hash_integer"
-    t.string "long_url"
+    t.text "long_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["hash_integer"], name: "index_short_urls_on_hash_integer"

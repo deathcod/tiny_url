@@ -11,6 +11,7 @@ class ShortUrlsController < ApplicationController
   end
 
   # GET /short_urls/1
+  # GET /short_urls/XXXXXXX
   # GET /short_urls/1.json
   def show
     if (@short_url = ShortUrl.find_by_hash_string(params[:id])).present?
@@ -35,6 +36,13 @@ class ShortUrlsController < ApplicationController
   # POST /short_urls.json
   def create
 
+    if short_url_params[:long_url].empty?
+      respond_to do |format|
+        format.html { redirect_to short_urls_url, notice: 'No URL was provided' }
+        format.json { render json: {reason: "No URL was provided" }}
+      end
+      return
+    end
     @short_url = get_short_url_object_for(short_url_params[:long_url])
     if @short_url.present?
       respond_to do |format|
