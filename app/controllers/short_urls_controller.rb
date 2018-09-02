@@ -9,13 +9,13 @@ class ShortUrlsController < ApplicationController
   # GET /short_urls/1
   # GET /short_urls/1.json
   def show
-    if (@short_url = ShortUrl.find_by_hash_string(params[:id]))
+    if (@short_url = ShortUrl.find_by_hash_string(params[:id])).present?
       @redirect = true
       respond_to do |format|
         format.html
       end
     else
-      @short_url = ShortUrl.find_by(params[:id])
+      @short_url = ShortUrl.find(params[:id])
       respond_to do |format|
         format.html
         format.json { render json: @short_url}
