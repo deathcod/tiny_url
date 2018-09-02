@@ -29,7 +29,7 @@
         <tr>
           <td><%= short_url.id%></td>
           <td><%= link_to "#{short_url.generate_short_url}", short_url_path(short_url.hash_string), target: "_blank"%></td>
-          <td><%= short_url.long_url %></td>
+          <td><%= trim_string(short_url.long_url) %></td>
           <td><%= link_to 'Destroy', short_url_path(short_url.hash_string), method: :delete, data: { confirm: 'Are you sure?' } %></td>
         </tr>
       <% end %>
