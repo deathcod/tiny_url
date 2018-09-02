@@ -1,0 +1,27 @@
+<p id="notice" style="text-align:center;"><%= notice %></p>
+<% if @redirect %>
+  <% content_for :javascript do %>
+    <script type='text/javascript'>
+      window.open('<%= @short_url.long_url %>', '_self')
+    </script>
+  <% end %>
+  <p style="padding:20px;font:10px;text-align:center">Redirecting to <b><%= @short_url.long_url %></b>....</p>
+<% else %>
+  <div style="text-align:center;">
+    <h1 style="padding:20px;">Shortten Url</h1>
+    <table style="margin: 0 auto;">
+      <tr>
+        <td style="padding:10px;font-size:20px;"><strong>Short url:</strong></td>
+        <td style="padding:10px;font-size:20px;"><%= link_to "#{@short_url.generate_short_url}", short_url_path(@short_url.hash_string), target: "_blank"%></td>
+      </tr>
+      <tr>
+        <td style="padding:10px;font-size:20px;"><strong>Long url:</strong></td>
+        <td style="padding:10px;font-size:20px;"><%= @short_url.long_url %></td>
+      </tr>
+    </table>
+
+    <div style="padding:20px;font-size:20px;">
+      <%= link_to 'Back', short_urls_path %>
+    </div>
+  </div>
+<% end %>

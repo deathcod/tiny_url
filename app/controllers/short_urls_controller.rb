@@ -1,19 +1,25 @@
 class ShortUrlsController < ApplicationController
-  before_action :set_short_url, only: :destroy
 
   # GET /short_urls
   # GET /short_urls.json
   def index
-    @short_urls = ShortUrl.all
+    @short_urls = ShortUrl.order(id: :desc).all
   end
 
   # GET /short_urls/1
   # GET /short_urls/1.json
   def show
-    @short_url = ShortUrl.find_by_hash_string(params[:id])
-    respond_to do |format|
-      format.html { render js: "window.open('#{@short_url.long_url}')" }
-      format.json { render json: @short_url.long_url}
+    if (@short_url = ShortUrl.find_by_hash_string(params[:id]))
+      @redirect = true
+      respond_to do |format|
+        format.html
+      end
+    else
+      @short_url = ShortUrl.find_by(params[:id])
+      respond_to do |format|
+        format.html
+        format.json { render json: @short_url}
+      end
     end
   end
 
@@ -28,7 +34,7 @@ class ShortUrlsController < ApplicationController
     @short_url = ShortUrl.find_by_long_url(short_url_params[:long_url])
     if @short_url.present?
       respond_to do |format|
-        format.html { redirect_to short_urls_url, notice: 'Short url was already present' }
+        format.html { redirect_to short_url_path(@short_url), notice: 'Short url was already present' }
         format.json { render :show, status: :created, location: @short_url }
       end
       return
@@ -37,7 +43,7 @@ class ShortUrlsController < ApplicationController
     @short_url = ShortUrl.new(long_url: short_url_params[:long_url])
     if @short_url.save
       respond_to do |format|
-        format.html { redirect_to short_urls_url, notice: 'Short url was successfully created.' }
+        format.html { redirect_to short_url_path(@short_url), notice: 'Short url was successfully created.' }
         format.json { render :show, status: :created, location: @short_url }
       end
     else
@@ -51,6 +57,7 @@ class ShortUrlsController < ApplicationController
   # DELETE /short_urls/1
   # DELETE /short_urls/1.json
   def destroy
+    @short_url = ShortUrl.find_by_hash_string(params[:id])
     @short_url.destroy
     respond_to do |format|
       format.html { redirect_to short_urls_url, notice: 'Short url was successfully destroyed.' }
@@ -58,12 +65,10 @@ class ShortUrlsController < ApplicationController
     end
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_short_url
-      @short_url = ShortUrl.find_by_hash_string(params[:id])
-    end
+  def upload_csv_urls
+  end
 
+  private
     # Never trust parameters from the scary internet, only allow the white list through.
     def short_url_params
       params.require(:short_url).permit(:long_url)

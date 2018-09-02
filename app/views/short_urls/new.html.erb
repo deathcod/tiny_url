@@ -1,5 +1,7 @@
-<h1>New Short Url</h1>
+<h1 style="text-align:center">New Short Url</h1>
 
-<%= render 'form', short_url: @short_url %>
+<div style="text-align:center;padding:20px;font-size:20px;">
+  <%= render 'form', short_url: @short_url %>
 
-<%= link_to 'Back', short_urls_path %>
+  <div style="padding:10px;"><%= link_to 'Back', short_urls_path %></div>
+</div>
