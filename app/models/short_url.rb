@@ -9,10 +9,9 @@
 #  updated_at   :datetime         not null
 #
 
-require 'digest'
-
 class ShortUrl < ApplicationRecord
   BASE = 62
+  RANDOM_STRING_GENERATOR_LENGTH = 6
 
   validates :long_url, presence: true
   validates :hash_integer, uniqueness: true
@@ -23,7 +22,7 @@ class ShortUrl < ApplicationRecord
   end
 
   def hash_integer
-    self[:hash_integer] ||= convert_base_to_decimal(self.hash_string)
+    self[:hash_integer] ||= decode(self.hash_string)
   end
 
   def long_url
@@ -56,7 +55,22 @@ class ShortUrl < ApplicationRecord
   end
 
   def hash_string
-    @hash_string ||= Digest::MD5.hexdigest(ShortUrl.filtered_long_url(self.long_url))[0..6]
+    return @hash_string if @hash_string
+    if self.hash_integer.present?
+      return (@hash_string = encode(self.hash_integer))
+    end
+
+    loop do
+      @hash_string = ""
+      while @hash_string.length != RANDOM_STRING_GENERATOR_LENGTH
+        @hash_string << random_str_range[Random.new.rand(BASE)]
+      end
+
+      this_integer_hash = decode(@hash_string)
+      # check if generator are not colliding
+      break unless ShortUrl.find_by_hash_integer(this_integer_hash).present?
+    end
+    return @hash_string
   end
 
   def hash_string=(hash_string)
@@ -73,12 +87,25 @@ class ShortUrl < ApplicationRecord
     end
   end
 
-  def convert_base_to_decimal(rand_str)
+  def random_str_range
+    [*(0..1), *('a'..'z'), *('A'..'Z')].freeze
+  end
+  
+  def encode(decimal_val)
+    str = ""
+    while(decimal_val > 0)
+      str << int_char_base_mapping[decimal_val % BASE]
+      decimal_val /= BASE
+    end
+    str
+  end
+
+  def decode(str)
     value = 0
     save_hash = {}
-    rand_str_length = rand_str.length
-    rand_str.reverse.split('').each_with_index do |c, i|
-      value += char_to_int_base_mapping[c] * calculate_power( rand_str_length - i - 1, save_hash)
+    str_length = str.length
+    str.reverse.split('').each_with_index do |c, i|
+      value += char_to_int_base_mapping[c] * calculate_power( str_length - i - 1, save_hash)
     end
     return value
   end
@@ -165,6 +192,73 @@ class ShortUrl < ApplicationRecord
       'X' => 59,
       'Y' => 60,
       'Z' => 61
+    } 
+  end
+
+  def int_char_base_mapping
+    @hash ||= {
+      0 => '0',
+      1 => '1',
+      2 => '2',
+      3 => '3',
+      4 => '4',
+      5 => '5',
+      6 => '6',
+      7 => '7',
+      8 => '8',
+      9 => '9',
+      10 => 'a',
+      11 => 'b',
+      12 => 'c',
+      13 => 'd',
+      14 => 'e',
+      15 => 'f',
+      16 => 'g',
+      17 => 'h',
+      18 => 'i',
+      19 => 'j',
+      20 => 'k',
+      21 => 'l',
+      22 => 'm',
+      23 => 'n',
+      24 => 'o',
+      25 => 'p',
+      26 => 'q',
+      27 => 'r',
+      28 => 's',
+      29 => 't',
+      30 => 'u',
+      31 => 'v',
+      32 => 'w',
+      33 => 'x',
+      34 => 'y',
+      35 => 'z',
+      36 => 'A',
+      37 => 'B',
+      38 => 'C',
+      39 => 'D',
+      40 => 'E',
+      41 => 'F',
+      42 => 'G',
+      43 => 'H',
+      44 => 'I',
+      45 => 'J',
+      46 => 'K',
+      47 => 'L',
+      48 => 'M',
+      49 => 'N',
+      50 => 'O',
+      51 => 'P',
+      52 => 'Q',
+      53 => 'R',
+      54 => 'S',
+      55 => 'T',
+      56 => 'U',
+      57 => 'V',
+      58 => 'W',
+      59 => 'X',
+      60 => 'Y',
+      61 => 'Z'
     } 
   end
 end

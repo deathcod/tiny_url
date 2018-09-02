@@ -1,6 +1,6 @@
 <%= form_with(model: short_url, local: true) do |form| %>
   <% if short_url.errors.any? %>
-    <div id="error_explanation">
+    <div id="error_explanation" style="text-align:center;">
       <h2><%= pluralize(short_url.errors.count, "error") %> prohibited this short_url from being saved:</h2>
 
       <ul>
