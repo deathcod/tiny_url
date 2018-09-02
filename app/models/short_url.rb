@@ -69,7 +69,7 @@ class ShortUrl < ApplicationRecord
       this_integer_hash = decode(str)
       # check if generator are not colliding
       unless ShortUrl.find_by_hash_integer(this_integer_hash).present?
-	@hash_string = str
+	      @hash_string = str
         break
       end
     end
