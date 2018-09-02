@@ -30,12 +30,11 @@ class ShortUrl < ApplicationRecord
     add_scheme_if_not_present(self[:long_url]) if self[:long_url]
   end
 
-  def filtered_long_url
-    @filtered_long_url ||= self.long_url.dup.tap do |str|
-      remove_scheme(str)
-      remove_subdomin(str)
+  def self.filtered_long_url(str)
+    str.dup.tap do |s|
+      s.gsub!(/^https?:\/\//, '')         # remove scheme
+      s.gsub!(/^www./, '')                # remove_subdomin
     end
-    return @filtered_long_url
   end
 
   def generate_short_url
@@ -57,7 +56,7 @@ class ShortUrl < ApplicationRecord
   end
 
   def hash_string
-    @hash_string ||= Digest::MD5.hexdigest(self.filtered_long_url)[0..6]
+    @hash_string ||= Digest::MD5.hexdigest(ShortUrl.filtered_long_url(self.long_url))[0..6]
   end
 
   def hash_string=(hash_string)
@@ -65,14 +64,6 @@ class ShortUrl < ApplicationRecord
   end
 
   private
-
-  def remove_scheme(str)
-    str.gsub!(/^https?:\/\//, '')
-  end
-
-  def remove_subdomin(str)
-    str.gsub!(/^www./, '')
-  end
 
   def add_scheme_if_not_present(str)
     unless str =~ /^https?:\/\//
