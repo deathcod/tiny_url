@@ -1,0 +1,24 @@
+<div style="text-align:center;">
+  <h1 style="padding:20px;">Imported URLS</h1>
+
+  <table style="margin: 0 auto">
+    <thead>
+      <tr>
+        <th>id</id>
+        <th>Short url</th>
+        <th>Long url</th>
+        <th colspan="3"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @short_urls.each do |row| %>
+        <tr>
+          <td><%= row[0]%></td>
+          <td><%= link_to "#{row[1]}", short_url_path(row[3]), target: "_blank"%></td>
+          <td><%= row[2] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,1 @@
+REDIS_POOL = ConnectionPool.new(size: 20, timeout: 1) { Redis.new(host: '127.0.0.1', port: 6379) }
