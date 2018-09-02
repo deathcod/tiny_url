@@ -53,7 +53,7 @@ class ShortUrlsController < ApplicationController
     end
 
     @short_url = create_short_url_object_for(short_url_params[:long_url])
-    if @short_url.save
+    if @short_url.valid?
       respond_to do |format|
         format.html { redirect_to short_url_path(@short_url), notice: 'Short url was successfully created.' }
         format.json { render :show, status: :created, location: @short_url }

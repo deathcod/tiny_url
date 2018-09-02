@@ -56,8 +56,8 @@ class ShortUrl < ApplicationRecord
 
   def hash_string
     return @hash_string if @hash_string
-    if self.hash_integer.present?
-      return (@hash_string = encode(self.hash_integer))
+    if self[:hash_integer].present?
+      return (@hash_string = encode(self[:hash_integer]))
     end
 
     loop do
@@ -88,7 +88,7 @@ class ShortUrl < ApplicationRecord
   end
 
   def random_str_range
-    [*(0..1), *('a'..'z'), *('A'..'Z')].freeze
+    [*(0..9), *('a'..'z'), *('A'..'Z')].freeze
   end
   
   def encode(decimal_val)
