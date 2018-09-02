@@ -61,14 +61,17 @@ class ShortUrl < ApplicationRecord
     end
 
     loop do
-      @hash_string = ""
-      while @hash_string.length != RANDOM_STRING_GENERATOR_LENGTH
-        @hash_string << random_str_range[Random.new.rand(BASE)]
+      str = ""
+      while str.length != RANDOM_STRING_GENERATOR_LENGTH
+        str << random_str_range[Random.new.rand(BASE)]
       end
 
-      this_integer_hash = decode(@hash_string)
+      this_integer_hash = decode(str)
       # check if generator are not colliding
-      break unless ShortUrl.find_by_hash_integer(this_integer_hash).present?
+      unless ShortUrl.find_by_hash_integer(this_integer_hash).present?
+	@hash_string = str
+        break
+      end
     end
     return @hash_string
   end
@@ -88,7 +91,7 @@ class ShortUrl < ApplicationRecord
   end
 
   def random_str_range
-    [*(0..9), *('a'..'z'), *('A'..'Z')].freeze
+    [*('0'..'9'), *('a'..'z'), *('A'..'Z')].freeze
   end
   
   def encode(decimal_val)
